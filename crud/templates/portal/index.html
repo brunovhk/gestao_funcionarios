@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            <p class="display-5" align="center">Gestão de funcionários</p>
+            {% if messages %}
+                <div class="messages alert alert-success alert-dismissible fade show bi bi-check-circle-fill" id="alerta">
+                    {% for message in messages %}
+                        <i{% if message.tags %}
+                            class="{{ message.tags }}"{% endif %}>{{ message }}</i>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <hr>
+            <a href="{% url 'adicionar_funcionario' %}" class="btn btn-success my-2">Adicionar</a>
+            <table class="table table-striped mt-1">
+                <thead>
+                <tr>
+                    <th class="border border-2 border-dark">Nome</th>
+                    <th class="border border-2 border-dark">E-mail</th>
+                    <th class="border border-2 border-dark">Função</th>
+                    <th class="border border-2 border-dark">Endereço</th>
+                    <th class="border border-2 border-dark">Data de nascimento</th>
+                    <th class="border border-2 border-dark">Telefone</th>
+                    <th class="border border-2 border-dark">Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for funcionario in funcionarios %}
+                    <tr>
+                        <td class="border border-2">{{ funcionario.nome }}</td>
+                        <td class="border border-2">{{ funcionario.email }}</td>
+                        <td class="border border-2">{{ funcionario.funcao }}</td>
+                        <td class="border border-2">{{ funcionario.endereco }}</td>
+                        <td class="border border-2">{{ funcionario.data_nascimento }}</td>
+                        <td class="border border-2">{{ funcionario.telefone }}</td>
+                        <td>
+                            <a href="{% url 'editar_funcionario' funcionario.id %}" class="btn btn-warning">Editar</a>
+                            <a href="{% url 'deletar_funcionario' funcionario.id %}" class="btn btn-danger"
+                               onclick="return confirm('Tem certeza que deseja excluir este funcionário?')"
+                            >Excluir</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination d-flex justify-content-end me-5 mt-3">
+            {% for pagina in funcionarios.paginator.page_range %}
+                {% if funcionarios.number == pagina %}
+                    <li class="page-item active">
+                        <a class="page-link" href="?p={{ pagina }}">{{ pagina }}</a>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?p={{ pagina }}">{{ pagina }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </nav>
+{% endblock %}
